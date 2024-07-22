@@ -1,4 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
+
+export enum WebSocketActionEnum {
+  FETCH = 'FETCH',
+  LOADING = 'LOADING',
+  DATA_REAL_TIME = 'DATA_REAL_TIME',
+}
+
+export type WebSocketAction = {
+  type: 'FETCH' | 'LOADING' | 'DATA_REAL_TIME';
+  payload?: {};
+};
 
 export type DataProps = {
   body: string;
@@ -7,19 +18,58 @@ export type DataProps = {
   userId: number;
 }[];
 
+export type WebSocketState = {
+  data: DataProps;
+  dataRealTime: DataProps;
+  loading?: boolean;
+};
+
+const reducer = (
+  state: WebSocketState,
+  action: WebSocketAction
+): WebSocketState => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case WebSocketActionEnum.FETCH:
+      return {
+        ...state,
+        ...payload,
+      };
+    case WebSocketActionEnum.LOADING:
+      return {
+        ...state,
+        ...payload,
+      };
+    case WebSocketActionEnum.DATA_REAL_TIME:
+      return {
+        ...state,
+        ...payload,
+      };
+    default:
+      return state;
+  }
+};
+
 export const useWebsocket = () => {
   const server = new WebSocket('https://echo.websocket.org/');
 
-  const [data, setData] = useState<DataProps>([]);
-  const [loading, setLoading] = useState(true);
-
-  const [dataRealTime, setDataRealTime] = useState<DataProps>([]);
+  const [state, dispatch] = useReducer(reducer, {
+    data: [],
+    dataRealTime: [],
+    loading: true,
+  });
 
   const getPosts = () => {
     fetch('https://jsonplaceholder.typicode.com/posts')
       .then((response) => response.json())
       .then((json) => {
-        setData(json);
+        dispatch({
+          type: 'FETCH',
+          payload: {
+            data: json,
+          },
+        });
       });
   };
 
@@ -29,20 +79,28 @@ export const useWebsocket = () => {
 
   useEffect(() => {
     server.addEventListener('open', () => {
-      server.send(JSON.stringify(data));
+      server.send(JSON.stringify(state.data));
     });
 
     server.addEventListener('message', (event) => {
-      setDataRealTime(JSON.parse(event.data));
+      dispatch({
+        type: 'FETCH',
+        payload: {
+          dataRealTime: JSON.parse(event.data),
+        },
+      });
 
-      setLoading(false);
+      dispatch({
+        type: 'LOADING',
+        payload: {
+          loading: false,
+        },
+      });
     });
-  }, [data]);
+  }, [state.data]);
 
   return {
-    data,
-    dataRealTime,
-    loading,
+    state,
     server,
   };
 };

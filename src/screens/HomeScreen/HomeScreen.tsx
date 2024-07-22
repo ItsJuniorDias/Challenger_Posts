@@ -5,19 +5,19 @@ import { useWebsocket } from '../../hooks';
 import { Container, Content } from './styles';
 
 export const HomeScreen = () => {
-  const { dataRealTime, loading } = useWebsocket();
+  const { state } = useWebsocket();
 
   return (
     <Container>
-      {loading && (
+      {state.loading && (
         <Content>
           <ActivityIndicator color="#343434" size="large" />
         </Content>
       )}
 
-      {!loading && (
+      {!state.loading && (
         <FlatList
-          data={dataRealTime}
+          data={state.dataRealTime}
           renderItem={({ item }) => (
             <CardItem
               id={item.id}
