@@ -10,6 +10,12 @@ Application built with React Native in order to show data from a posts api
 - **React-Navigation** for navigation between screens
 - **useReducer** for state control
 
+**Node Version** 
+```
+$ node -v 
+$ v18.0.0 
+```
+
 **Installing dependencies**
 
 ```
@@ -22,12 +28,6 @@ $ yarn
 * With all dependencies installed and the environment properly configured, you can now run the app;
 * With Android Studio running and Emulador open:
 * Or emulate on your physical device.
-
-**Node Version** 
-```
-$ node -v 
-$ v18.0.0 
-```
 
 Android
 
