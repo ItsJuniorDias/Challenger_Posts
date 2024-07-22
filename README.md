@@ -5,6 +5,7 @@ Application built with React Native in order to show data from a posts api
 
 
 ### Tools
+- **Websocket** for real-time data control
 - **Styled-component** to work with customizable components
 - **Typescript** as a development language facilitating the definition of types
 - **React-Navigation** for navigation between screens
